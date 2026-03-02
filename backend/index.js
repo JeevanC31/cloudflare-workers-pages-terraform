@@ -9,14 +9,15 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    // Handle CORS preflight request
+    // Handle preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
-        headers: corsHeaders
+        headers: corsHeaders,
       });
     }
 
+    // Main response
     return new Response(
       JSON.stringify({
         success: true,
