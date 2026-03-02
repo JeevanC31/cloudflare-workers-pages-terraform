@@ -1,11 +1,30 @@
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request) {
+
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    };
+
+    // Handle preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        headers: corsHeaders
+      });
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
         message: "Production-ready Worker deployed 🚀"
       }),
-      { headers: { "Content-Type": "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders
+        }
+      }
     );
   }
 };
