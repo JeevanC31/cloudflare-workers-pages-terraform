@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloudflare Pages + Workers</title>
+</head>
+<body>
+  <h1>Cloudflare Pages (Production)</h1>
+  <button onclick="callAPI()">Call Backend</button>
+
+  <script>
+    async function callAPI() {
+      const res = await fetch("https://backend-worker.YOUR_SUBDOMAIN.workers.dev");
+      const data = await res.json();
+      alert(data.message);
+    }
+  </script>
+</body>
+</html>
