@@ -6,13 +6,12 @@
 <body>
   <h1>Cloudflare Pages (Production)</h1>
   <button onclick="callAPI()">Call Backend</button>
-
   <script>
     async function callAPI() {
       const res = await fetch("https://backend-worker.jeevanjeee00.workers.dev");
       const data = await res.json();
       alert(data.message);
-    }
-  </script>
+  } 
+</script>
 </body>
 </html>
