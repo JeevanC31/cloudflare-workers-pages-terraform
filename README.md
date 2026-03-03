@@ -53,7 +53,7 @@ https://cloudflare-workers-pages-terraform.pages.dev
 https://backend-worker.<your-subdomain>.workers.dev
 ```
 ---
-## 🛠 Tech Stack
+##  Tech Stack
 
 - Terraform
 - Cloudflare Workers

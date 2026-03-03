@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cloudflare Pages + Workers</title>
+  <title>Task Counter App</title>
 </head>
 <body>
-  <h1>Cloudflare Pages (Production)</h1>
-  <button onclick="callAPI()">Call Backend</button>
+  <h1>🚀 Cloudflare Task Counter</h1>
+
+  <p>Current Task Count: <span id="count">0</span></p>
+
+  <button onclick="getCount()">Get Count</button>
+  <button onclick="addTask()">Add Task</button>
+
   <script>
-    async function callAPI() {
-      const res = await fetch("https://backend-worker.jeevanjeee00.workers.dev");
+    const API_URL = "https://backend-worker.jeevanjeee00.workers.dev";
+
+    async function getCount() {
+      const res = await fetch(`${API_URL}/count`);
       const data = await res.json();
+      document.getElementById("count").innerText = data.taskCount;
+    }
+
+    async function addTask() {
+      const res = await fetch(`${API_URL}/add`, {
+        method: "POST"
+      });
+      const data = await res.json();
+      document.getElementById("count").innerText = data.taskCount;
       alert(data.message);
-  } 
-</script>
+    }
+
+    // Load count on page load
+    getCount();
+  </script>
 </body>
 </html>
