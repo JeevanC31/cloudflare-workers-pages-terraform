@@ -15,21 +15,27 @@
     const API_URL = "https://backend-worker.jeevanjeee00.workers.dev";
 
     async function getCount() {
-      const res = await fetch(`${API_URL}/count`);
-      const data = await res.json();
-      document.getElementById("count").innerText = data.taskCount;
+      try {
+        const res = await fetch(`${API_URL}/count`);
+        const data = await res.json();
+        document.getElementById("count").innerText = data.count;
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     async function addTask() {
-      const res = await fetch(`${API_URL}/add`, {
-        method: "POST"
-      });
-      const data = await res.json();
-      document.getElementById("count").innerText = data.taskCount;
-      alert(data.message);
+      try {
+        const res = await fetch(`${API_URL}/add`, {
+          method: "POST"
+        });
+        const data = await res.json();
+        document.getElementById("count").innerText = data.count;
+      } catch (err) {
+        console.error(err);
+      }
     }
 
-    // Load count on page load
     getCount();
   </script>
 </body>

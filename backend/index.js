@@ -1,7 +1,8 @@
-let taskCount = 0;
+let count = 0;
 
 export default {
   async fetch(request) {
+
     const allowedOrigin = "https://cloudflare-workers-pages-terraform.pages.dev";
 
     const corsHeaders = {
@@ -19,47 +20,25 @@ export default {
 
     const url = new URL(request.url);
 
-    // Health check
-    if (url.pathname === "/") {
-      return new Response(
-        JSON.stringify({ status: "API Running 🚀" }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...corsHeaders
-          }
-        }
-      );
+    // GET /count
+    if (request.method === "GET" && url.pathname === "/count") {
+      return new Response(JSON.stringify({ count }), {
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      });
     }
 
-    // Get count
-    if (url.pathname === "/count" && request.method === "GET") {
-      return new Response(
-        JSON.stringify({ taskCount }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...corsHeaders
-          }
-        }
-      );
-    }
-
-    // Add task
-    if (url.pathname === "/add" && request.method === "POST") {
-      taskCount++;
-      return new Response(
-        JSON.stringify({
-          message: "Task added successfully ✅",
-          taskCount
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...corsHeaders
-          }
-        }
-      );
+    // POST /add
+    if (request.method === "POST" && url.pathname === "/add") {
+      count++;
+      return new Response(JSON.stringify({ count }), {
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      });
     }
 
     return new Response("Not Found", { status: 404 });
