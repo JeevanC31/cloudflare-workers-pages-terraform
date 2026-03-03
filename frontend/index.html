@@ -1,42 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Task Counter App</title>
+  <title>Cloudflare Task Manager</title>
 </head>
 <body>
-  <h1>🚀 Cloudflare Task Counter</h1>
 
-  <p>Current Task Count: <span id="count">0</span></p>
+  <h1>🚀 Cloudflare Task Manager</h1>
 
-  <button onclick="getCount()">Get Count</button>
+  <!-- Add Task Section -->
+  <h3>Add Task</h3>
+  <input type="text" id="title" placeholder="Task Title" />
+  <input type="text" id="content" placeholder="Task Content" />
   <button onclick="addTask()">Add Task</button>
 
-  <script>
-    const API_URL = "https://backend-worker.jeevanjeee00.workers.dev";
+  <hr>
 
-    async function getCount() {
-      try {
-        const res = await fetch(`${API_URL}/count`);
-        const data = await res.json();
-        document.getElementById("count").innerText = data.count;
-      } catch (err) {
-        console.error(err);
-      }
-    }
+  <!-- Delete Task -->
+  <h3>Delete Task</h3>
+  <select id="deleteSelect"></select>
+  <button onclick="deleteTask()">Delete Task</button>
 
-    async function addTask() {
-      try {
-        const res = await fetch(`${API_URL}/add`, {
-          method: "POST"
-        });
-        const data = await res.json();
-        document.getElementById("count").innerText = data.count;
-      } catch (err) {
-        console.error(err);
-      }
-    }
+  <hr>
 
-    getCount();
-  </script>
+  <!-- Update Task -->
+  <h3>Update Task</h3>
+  <select id="updateSelect"></select>
+  <input type="text" id="updateTitle" placeholder="New Title" />
+  <input type="text" id="updateContent" placeholder="New Content" />
+  <button onclick="updateTask()">Update Task</button>
+
+  <hr>
+
+  <!-- List Tasks -->
+  <h3>All Tasks</h3>
+  <button onclick="listTasks()">List Tasks</button>
+  <ul id="taskList"></ul>
+
+<script>
+const API = "https://backend-worker.jeevanjeee00.workers.dev";
+
+async function addTask() {
+  const title = document.getElementById("title").value;
+  const content = document.getElementById("content").value;
+
+  const res = await fetch(`${API}/tasks`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title, content })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Task Added Successfully");
+    listTasks();
+  } else {
+    alert("Failed to Add Task");
+  }
+}
+
+async function listTasks() {
+  const res = await fetch(`${API}/tasks`);
+  const tasks = await res.json();
+
+  const list = document.getElementById("taskList");
+  const deleteSelect = document.getElementById("deleteSelect");
+  const updateSelect = document.getElementById("updateSelect");
+
+  list.innerHTML = "";
+  deleteSelect.innerHTML = "";
+  updateSelect.innerHTML = "";
+
+  tasks.forEach(task => {
+    const li = document.createElement("li");
+    li.textContent = `${task.id} - ${task.title} : ${task.content}`;
+    list.appendChild(li);
+
+    const option1 = new Option(task.title, task.id);
+    const option2 = new Option(task.title, task.id);
+
+    deleteSelect.appendChild(option1);
+    updateSelect.appendChild(option2);
+  });
+
+  alert("Tasks Loaded");
+}
+
+async function deleteTask() {
+  const id = document.getElementById("deleteSelect").value;
+
+  const res = await fetch(`${API}/tasks/${id}`, {
+    method: "DELETE"
+  });
+
+  if (res.ok) {
+    alert("Task Deleted Successfully");
+    listTasks();
+  } else {
+    alert("Failed to Delete Task");
+  }
+}
+
+async function updateTask() {
+  const id = document.getElementById("updateSelect").value;
+  const title = document.getElementById("updateTitle").value;
+  const content = document.getElementById("updateContent").value;
+
+  const res = await fetch(`${API}/tasks/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title, content })
+  });
+
+  if (res.ok) {
+    alert("Task Updated Successfully");
+    listTasks();
+  } else {
+    alert("Failed to Update Task");
+  }
+}
+
+listTasks();
+</script>
+
 </body>
 </html>
